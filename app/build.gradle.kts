@@ -1,6 +1,8 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.jetbrains.kotlin.android)
+  id("kotlin-kapt")
+  id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -63,4 +65,32 @@ dependencies {
   androidTestImplementation(libs.androidx.ui.test.junit4)
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
+
+
+
+  //Dagger Hilt
+  kapt("androidx.hilt:hilt-compiler:1.2.0")
+  kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+  implementation("com.google.dagger:hilt-android:2.51.1")
+  implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
+  implementation("androidx.hilt:hilt-work:1.2.0")
+  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
+  implementation( "androidx.hilt:hilt-navigation-compose:1.2.0")
+  implementation ("androidx.navigation:navigation-compose:2.7.7")
+
+
+  val nav_version = "2.7.7"
+  implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+  implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+  implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
+  androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+  implementation("androidx.navigation:navigation-compose:$nav_version")
+
+  val roomVersion = "2.6.1"
+  implementation("androidx.room:room-runtime:$roomVersion")
+  annotationProcessor("androidx.room:room-compiler:$roomVersion")
+  kapt("androidx.room:room-compiler:$roomVersion")
+  implementation("androidx.room:room-ktx:$roomVersion")
+  testImplementation("androidx.room:room-testing:$roomVersion")
+  implementation("androidx.room:room-paging:$roomVersion")
 }
