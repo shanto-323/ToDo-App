@@ -6,6 +6,8 @@ import androidx.room.RoomDatabase
 import com.example.my_to_do_list.Application
 import com.example.my_to_do_list.data.local.dao.ToDoDao
 import com.example.my_to_do_list.data.local.database.ToDoDatabase
+import com.example.my_to_do_list.data.local.repository.RepositoryImpl
+import com.example.my_to_do_list.domain.repository.Repository
 import com.example.my_to_do_list.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -30,7 +32,14 @@ object AppModule {
 
   @Provides
   @Singleton
-  fun provideDao(db: ToDoDatabase) : ToDoDao{
+  fun provideDao(db: ToDoDatabase): ToDoDao {
     return db.dao()
   }
+
+  @Provides
+  @Singleton
+  fun provideRepository(toDoDao: ToDoDao): Repository {
+    return RepositoryImpl(toDoDao)
+  }
+
 }
