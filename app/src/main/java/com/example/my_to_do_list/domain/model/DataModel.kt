@@ -8,7 +8,7 @@ import com.example.my_to_do_list.utils.Constants
 data class DataModel(
 
   @PrimaryKey(autoGenerate = true)
-  val id : Int,
+  val id : Int = 0,
 
   val name : String,
   val time : String,
