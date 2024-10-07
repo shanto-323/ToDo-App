@@ -9,10 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -38,14 +36,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.my_to_do_list.presentation.todos.items.TodoCard
+import com.example.my_to_do_list.utils.Constants
 import java.time.LocalTime
 
 @Composable
 fun Todo(
   modifier: Modifier = Modifier,
-  viewModel: TodoViewModel = hiltViewModel()
-) {
+  navHostController: NavController,
+  viewModel: TodoViewModel = hiltViewModel(),
+
+  ) {
   var name by rememberSaveable {
     mutableStateOf("")
   }
@@ -55,7 +58,7 @@ fun Todo(
   var showDialog by rememberSaveable { mutableStateOf(false) }
   Scaffold(
     topBar = {
-      Row (
+      Row(
         modifier
           .fillMaxWidth()
           .fillMaxHeight(0.12f)
@@ -63,7 +66,7 @@ fun Todo(
           .padding(20.dp)
           .statusBarsPadding(),
         verticalAlignment = Alignment.CenterVertically
-      ){
+      ) {
         Text(
           text = "SEARCH BAR HERE",
           style = TextStyle(
@@ -73,7 +76,11 @@ fun Todo(
           ),
           modifier = Modifier.weight(1f)
         )
-        Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Add Todo", tint = Color.Black)
+        Icon(
+          imageVector = Icons.Default.MoreVert,
+          contentDescription = "Add Todo",
+          tint = Color.Black
+        )
       }
     },
     floatingActionButton = {
@@ -106,6 +113,12 @@ fun Todo(
                 .padding(2.dp)
             ) {
               TodoCard(
+                modifier = Modifier
+                  .clickable(
+                    onClick = {
+                      navHostController.navigate("${Constants.TASKS_SCREEN}/${todoItems.id}")
+                    }
+                  ),
                 name = todoItems.name,
                 done = todoItems.done
               )

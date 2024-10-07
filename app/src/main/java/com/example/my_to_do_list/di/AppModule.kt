@@ -30,7 +30,8 @@ object AppModule {
       app,
       ToDoDatabase::class.java,
       Constants.DATABASE_NAME
-    ).build()
+    ).fallbackToDestructiveMigration()
+      .build()
   }
 
   @Provides

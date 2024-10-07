@@ -8,5 +8,10 @@ import kotlinx.coroutines.flow.Flow
 class TasksRepositoryImpl(
   private val dao: ToDoTasksDao
 ) : TasksRepository {
-  override fun getTasks(id: Int): Flow<List<TasksModel>> = dao.getAllTodosById(id)
+
+  override suspend fun getTasks(id: Int): Flow<List<TasksModel>> = dao.getAllTodosById(id)
+
+  override suspend fun upInTasks(tasksModel: TasksModel) = dao.upInTasks(tasksModel)
+
+  override suspend fun deleteTasks(id: Int) = dao.deleteTasks(id)
 }
