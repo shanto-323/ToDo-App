@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -69,8 +70,8 @@ fun Task(
   var name by rememberSaveable {
     mutableStateOf("")
   }
-  var date by rememberSaveable {
-    mutableStateOf("")
+  var isDone by rememberSaveable {
+    mutableStateOf(false)
   }
   var showDialog by rememberSaveable { mutableStateOf(false) }
   Scaffold(
@@ -85,7 +86,7 @@ fun Task(
         verticalAlignment = Alignment.CenterVertically
       ) {
         Text(
-          text = "SEARCH BAR HERE",
+          text = "Name",
           style = TextStyle(
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
@@ -118,6 +119,7 @@ fun Task(
       Column(
         modifier
           .fillMaxSize()
+          .systemBarsPadding()
           .background(MaterialTheme.colorScheme.tertiary)
           .padding(it)
           .padding(10.dp, 2.dp)
@@ -132,6 +134,18 @@ fun Task(
             ) {
               TaskCard(
                 name = todoItems.tasksName,
+                isDoneClicked = {
+                  viewModel.updateTasks(
+                    taskId = todoItems.tasksId,
+                    id = todoItems.id,
+                    name = todoItems.tasksName,
+                    done = !todoItems.tasksDone
+                  )
+                },
+                taskDone = todoItems.tasksDone,
+                onDeleted = {
+                  viewModel.deleteTodo(todoItems.tasksId)
+                }
               )
             }
           }

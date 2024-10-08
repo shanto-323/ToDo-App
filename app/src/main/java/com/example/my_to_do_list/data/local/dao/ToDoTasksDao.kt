@@ -12,7 +12,7 @@ interface ToDoTasksDao {
   @Query("SELECT * FROM tasks_table WHERE id = :id ORDER BY tasksId ASC")
   fun getAllTodosById(id:Int) : Flow<List<TasksModel>>
 
-  @Upsert
+  @Upsert()
   suspend fun upInTasks(tasksModel: TasksModel)
 
   @Query("DELETE FROM tasks_table WHERE tasksId = :id")

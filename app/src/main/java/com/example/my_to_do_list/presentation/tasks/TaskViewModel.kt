@@ -27,7 +27,7 @@ class TaskViewModel @Inject constructor(
     }
   }
 
-  fun createTasks(id : Int ,name: String,done: Boolean = false){
+  fun createTasks(taskIid : Int? = null,id : Int ,name: String,done: Boolean = false){
     val model = TasksModel(
       id = id,
       tasksName = name,
@@ -35,6 +35,17 @@ class TaskViewModel @Inject constructor(
     )
     upInTasks(model)
   }
+
+  fun updateTasks(taskId : Int,id : Int ,name: String,done: Boolean = false){
+    val model = TasksModel(
+      tasksId = taskId,
+      id = id,
+      tasksName = name,
+      tasksDone = done
+    )
+    upInTasks(model)
+  }
+
   private fun upInTasks(tasksModel: TasksModel) {
     viewModelScope.launch {
       repository.upInTasks(tasksModel)
