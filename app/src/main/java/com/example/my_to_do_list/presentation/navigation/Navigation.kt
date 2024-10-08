@@ -19,14 +19,14 @@ fun Navigation(
   ) {
     composable(Constants.TODO_SCREEN) {
       Todo(
-        navHostController = navController
+        navHostController = navController,
       )
     }
     composable("${Constants.TASKS_SCREEN}/{id}") { backStackEntry ->
       val id = backStackEntry.arguments?.getString("id")?.toInt() ?: -1
       Task(
-        navHostController = navController,
-        id = id
+        id = id,
+        navigateBack = { navController.popBackStack() }
       )
     }
   }

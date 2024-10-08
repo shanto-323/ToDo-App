@@ -7,27 +7,41 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.my_to_do_list.domain.model.DataModel
 import com.example.my_to_do_list.domain.model.TasksModel
+import com.example.my_to_do_list.domain.repository.Repository
 import com.example.my_to_do_list.domain.repository.TasksRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(
-  private val repository: TasksRepository
-) :ViewModel() {
+  private val repository: TasksRepository,
+  private val singleRepo: Repository
+) : ViewModel() {
   var state by mutableStateOf(State())
     private set
 
-  fun getTasks(id: Int){
+  fun getTasks(id: Int) {
     viewModelScope.launch {
-      repository.getTasks(id).collect {
-        state = state.copy(listOfTodos = it)
+      val listFlow = async {
+        repository.getTasks(id).collect {
+          state = state.copy(listOfTasks = it)
+        }
       }
+      val singleFlow = async {
+        val data = singleRepo.getSingleTodo(id)
+        state = state.copy(
+          singleDataModel = data
+        )
+      }
+      listFlow.await()
+      singleFlow.await()
     }
   }
 
-  fun createTasks(taskIid : Int? = null,id : Int ,name: String,done: Boolean = false){
+
+  fun createTasks(id: Int, name: String, done: Boolean = false) {
     val model = TasksModel(
       id = id,
       tasksName = name,
@@ -36,7 +50,7 @@ class TaskViewModel @Inject constructor(
     upInTasks(model)
   }
 
-  fun updateTasks(taskId : Int,id : Int ,name: String,done: Boolean = false){
+  fun updateTasks(taskId: Int, id: Int, name: String, done: Boolean = false) {
     val model = TasksModel(
       tasksId = taskId,
       id = id,
@@ -52,7 +66,7 @@ class TaskViewModel @Inject constructor(
     }
   }
 
-  fun deleteTodo(id: Int){
+  fun deleteTodo(id: Int) {
     viewModelScope.launch {
       repository.deleteTasks(id)
     }
@@ -60,5 +74,6 @@ class TaskViewModel @Inject constructor(
 }
 
 data class State(
-  val listOfTodos: List<TasksModel> = emptyList()
+  val listOfTasks: List<TasksModel> = emptyList(),
+  val singleDataModel: DataModel = DataModel()
 )

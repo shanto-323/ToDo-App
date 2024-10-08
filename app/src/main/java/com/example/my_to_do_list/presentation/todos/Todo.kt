@@ -2,7 +2,6 @@ package com.example.my_to_do_list.presentation.todos
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -20,10 +20,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -32,7 +30,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,12 +41,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.my_to_do_list.presentation.tasks.items.MyShapeLine
 import com.example.my_to_do_list.presentation.todos.items.TodoCard
 import com.example.my_to_do_list.utils.Constants
@@ -63,9 +60,6 @@ fun Todo(
 
   ) {
   var name by rememberSaveable {
-    mutableStateOf("")
-  }
-  var date by rememberSaveable {
     mutableStateOf("")
   }
   var showDialog by rememberSaveable { mutableStateOf(false) }
@@ -82,18 +76,14 @@ fun Todo(
           verticalAlignment = Alignment.CenterVertically
         ) {
           Text(
-            text = "SEARCH BAR HERE",
+            text = "TODO APP",
             style = TextStyle(
               fontSize = 24.sp,
               fontWeight = FontWeight.SemiBold,
               color = MaterialTheme.colorScheme.secondary
             ),
-            modifier = Modifier.weight(1f)
-          )
-          Icon(
-            imageVector = Icons.Default.MoreVert,
-            contentDescription = "Add Todo",
-            tint = Color.Black
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.Center
           )
         }
         MyShapeLine(color = MaterialTheme.colorScheme.secondary)
@@ -124,9 +114,11 @@ fun Todo(
       Column(
         modifier
           .fillMaxSize()
+          .statusBarsPadding()
+          .systemBarsPadding()
           .background(MaterialTheme.colorScheme.tertiary)
           .padding(it)
-          .padding(10.dp,2.dp)
+          .padding(10.dp, 2.dp)
       ) {
         LazyColumn {
           items(viewModel.state.listOfTodos) { todoItems ->
@@ -147,6 +139,13 @@ fun Todo(
                 done = todoItems.done
               )
             }
+          }
+          item {
+            Box(
+              modifier.height(80.dp)
+                .fillMaxWidth()
+                .background(Color.Transparent)
+            ) {}
           }
         }
       }
@@ -195,6 +194,7 @@ fun Todo(
               onClick = {
                 viewModel.createTodo(name, LocalTime.now().toString())
                 showDialog = false
+                name = ""
               },
               modifier.fillMaxWidth(0.8f),
               colors = ButtonDefaults.buttonColors(

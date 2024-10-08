@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -20,12 +21,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -43,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -59,7 +63,7 @@ import java.time.LocalTime
 fun Task(
   modifier: Modifier = Modifier,
   viewModel: TaskViewModel = hiltViewModel(),
-  navHostController: NavController,
+  navigateBack: () -> Unit,
   id: Int = 0
 ) {
 
@@ -70,28 +74,41 @@ fun Task(
   var name by rememberSaveable {
     mutableStateOf("")
   }
-  var isDone by rememberSaveable {
-    mutableStateOf(false)
-  }
   var showDialog by rememberSaveable { mutableStateOf(false) }
+
   Scaffold(
     topBar = {
       Row(
         modifier
           .fillMaxWidth()
           .fillMaxHeight(0.12f)
-          .background(Color.White)
-          .padding(20.dp)
-          .statusBarsPadding(),
+          .statusBarsPadding()
+          .background(MaterialTheme.colorScheme.primary)
+          .padding(20.dp),
         verticalAlignment = Alignment.CenterVertically
       ) {
+        IconButton(
+          onClick = {navigateBack()}
+        ) {
+          Icon(
+            imageVector = Icons.Default.ArrowBack,
+            contentDescription = "Add Todo",
+            tint = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.size(32.dp)
+          )
+        }
+
         Text(
-          text = "Name",
+          text = viewModel.state.singleDataModel.name,
           style = TextStyle(
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.Gray
-          )
+            color = MaterialTheme.colorScheme.secondary
+          ),
+          modifier = Modifier
+            .weight(1f)
+            .padding(start = 20.dp),
+          textAlign = TextAlign.Start
         )
       }
     },
@@ -119,13 +136,14 @@ fun Task(
       Column(
         modifier
           .fillMaxSize()
+          .statusBarsPadding()
           .systemBarsPadding()
           .background(MaterialTheme.colorScheme.tertiary)
           .padding(it)
           .padding(10.dp, 2.dp)
       ) {
         LazyColumn {
-          items(viewModel.state.listOfTodos) { todoItems ->
+          items(viewModel.state.listOfTasks) { todoItems ->
             Box(
               modifier
                 .fillMaxWidth()
@@ -148,6 +166,14 @@ fun Task(
                 }
               )
             }
+          }
+          item {
+            Box(
+              modifier
+                .height(80.dp)
+                .fillMaxWidth()
+                .background(Color.Transparent)
+            ) {}
           }
         }
       }
@@ -174,7 +200,7 @@ fun Task(
               ),
               singleLine = true,
               label = {
-                Text(text = "Enter Todo Name")
+                Text(text = "Task Name")
               },
               colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.primary,
@@ -196,6 +222,7 @@ fun Task(
               onClick = {
                 viewModel.createTasks(id = id, name = name)
                 showDialog = false
+                name = ""
               },
               modifier.fillMaxWidth(0.8f),
               colors = ButtonDefaults.buttonColors(
@@ -203,7 +230,7 @@ fun Task(
                 contentColor = MaterialTheme.colorScheme.primary
               )
             ) {
-              Text(text = "Create Todo")
+              Text(text = "Create Task")
             }
           }
         }

@@ -17,4 +17,7 @@ interface ToDoDao {
 
   @Query("DELETE FROM todo_table WHERE id = :id")
   suspend fun deleteToDo(id: Int)
+
+  @Query("SELECT * FROM todo_table WHERE id = :id")
+  suspend fun getSingleTodo(id: Int) : DataModel
 }

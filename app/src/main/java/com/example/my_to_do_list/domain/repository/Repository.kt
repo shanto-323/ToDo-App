@@ -10,4 +10,6 @@ interface Repository {
   suspend fun getALlTodos(): Flow<List<DataModel>>
 
   suspend fun deleteTodo(id:Int)
+
+  suspend fun getSingleTodo(id: Int) : DataModel
 }

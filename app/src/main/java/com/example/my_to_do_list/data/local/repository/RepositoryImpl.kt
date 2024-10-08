@@ -13,4 +13,6 @@ class RepositoryImpl(
   override suspend fun getALlTodos(): Flow<List<DataModel>> = todoDao.getAllToDo()
 
   override suspend fun deleteTodo(id: Int) = todoDao.deleteToDo(id)
+
+  override suspend fun getSingleTodo(id: Int) = todoDao.getSingleTodo(id)
 }

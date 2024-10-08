@@ -10,7 +10,7 @@ data class DataModel(
   @PrimaryKey(autoGenerate = true)
   val id : Int = 0,
 
-  val name : String,
-  val time : String,
-  val done : Boolean,
+  val name : String = "",
+  val time : String = "",
+  val done : Boolean = false,
 )
